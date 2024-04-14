@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../Log/log_cubit.dart';
+import '../ui/Log/log_cubit.dart';
+
+
 
 class textFrom extends StatelessWidget {
   const textFrom({
