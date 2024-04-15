@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -6,19 +5,15 @@ import '../../combonents/My_button.dart';
 import '../../combonents/textFromFiled.dart';
 import 'log_cubit.dart';
 
-
 class log extends StatelessWidget {
   log({super.key});
-
-  TextEditingController emailCtr = TextEditingController();
-  TextEditingController passCtr = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
         child: BlocProvider(
-          create: (context) => LogCubit(),
+          create: (context) => LogCubit(context),
           child: BlocBuilder<LogCubit, LogState>(
             builder: (context, state) {
               final cubit = context.read<LogCubit>();
@@ -36,7 +31,7 @@ class log extends StatelessWidget {
                   textFrom(
                     hint: 'email',
                     pri: cubit.change,
-                    controller: emailCtr,
+                    controller: cubit.userctr,
                     onTap: () {
                       cubit.chanager();
                     },
@@ -49,7 +44,7 @@ class log extends StatelessWidget {
                   textFrom(
                     hint: 'Password',
                     pri: cubit.flag,
-                    controller: passCtr,
+                    controller: cubit.passctr,
                     onTap: () {
                       cubit.chanager();
                     },
@@ -60,12 +55,17 @@ class log extends StatelessWidget {
                     height: 15,
                   ),
                   cubit.flag == true
-                      ? button(
-                          radi: cubit.flag ? 5 : 50,
-                          text: 'Login',
-                          color: cubit.flag
-                              ? Colors.blueAccent
-                              : Colors.greenAccent,
+                      ? InkWell(
+                          onTap: () {
+                            cubit.login();
+                          },
+                          child: button(
+                            radi: cubit.flag ? 5 : 50,
+                            text: 'Login',
+                            color: cubit.flag
+                                ? Colors.blueAccent
+                                : Colors.greenAccent,
+                          ),
                         )
                       : button(
                           text: 'Registor',
