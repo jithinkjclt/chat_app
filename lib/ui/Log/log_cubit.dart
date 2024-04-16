@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -13,10 +14,33 @@ class LogCubit extends Cubit<LogState> {
   bool flag = true;
   bool change = true;
 
-
   TextEditingController userctr = TextEditingController();
   TextEditingController passctr = TextEditingController();
+  TextEditingController namectr = TextEditingController();
   bool flame = true;
+
+  registor() async {
+    try {
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: userctr.text.trim(), password: passctr.text.trim())
+          .then((value) async {
+        await FirebaseFirestore.instance.collection("user").add({
+          "user": userctr.text,"name":namectr.text
+        });
+        Navigator.of(context)
+            .pushReplacement(MaterialPageRoute(builder: (context) {
+          return ChatList();
+        }));
+      });
+    } on FirebaseAuthException catch (e) {
+      ScaffoldMessenger(
+          child: AlertDialog(
+        backgroundColor: Colors.red,
+        title: Text(e.code),
+      ));
+    }
+  }
 
   login() async {
     if (userctr.text.isNotEmpty && passctr.text.isNotEmpty) {
@@ -26,13 +50,11 @@ class LogCubit extends Cubit<LogState> {
       try {
         await FirebaseAuth.instance
             .signInWithEmailAndPassword(
-            email: userctr.text.trim(), password: passctr.text.trim())
+                email: userctr.text.trim(), password: passctr.text.trim())
             .then((value) => Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (context) {
-
-
-          return ChatList();
-        })));
+                    .pushReplacement(MaterialPageRoute(builder: (context) {
+                  return ChatList();
+                })));
       } on FirebaseException catch (e) {
         flame = true;
 
@@ -48,24 +70,6 @@ class LogCubit extends Cubit<LogState> {
 
     emit(LogInitial());
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   chanager() {
     change = !change;

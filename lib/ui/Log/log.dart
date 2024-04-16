@@ -28,6 +28,23 @@ class log extends StatelessWidget {
                   const SizedBox(
                     height: 50,
                   ),
+                  cubit.flag
+                      ? SizedBox(
+                          height: 5,
+                        )
+                      : textFrom(
+                          hint: 'Name',
+                          pri: cubit.change,
+                          controller: cubit.namectr,
+                          onTap: () {
+                            cubit.chanager();
+                          },
+                          time: cubit.flag ? 500 : 900,
+                          pad: cubit.flag ? 28 : 50,
+                        ),
+                  const SizedBox(
+                    height: 25,
+                  ),
                   textFrom(
                     hint: 'email',
                     pri: cubit.change,
@@ -67,12 +84,17 @@ class log extends StatelessWidget {
                                 : Colors.greenAccent,
                           ),
                         )
-                      : button(
-                          text: 'Registor',
-                          color: cubit.flag
-                              ? Colors.blueAccent
-                              : Colors.greenAccent,
-                          radi: cubit.flag ? 5 : 50,
+                      : InkWell(
+                          onTap: () {
+                            cubit.registor();
+                          },
+                          child: button(
+                            text: 'Registor',
+                            color: cubit.flag
+                                ? Colors.blueAccent
+                                : Colors.greenAccent,
+                            radi: cubit.flag ? 5 : 50,
+                          ),
                         ),
                   const SizedBox(
                     height: 20,
