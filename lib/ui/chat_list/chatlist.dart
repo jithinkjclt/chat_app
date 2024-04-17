@@ -1,14 +1,38 @@
+import 'package:chat_app/ui/Log/log.dart';
+import 'package:chat_app/ui/chatpage/chatPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-
+import '../../Localstorage/LocalStorage.dart';
 class ChatList extends StatelessWidget {
   const ChatList({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        drawer: Drawer(
+          child: Center(
+            child: InkWell(
+              onTap: () {
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) {
+                    LocalStorage().deleteUser();
+                    return log();
+
+                  },
+                ));
+              },
+              child: const Row(
+                children: [
+                  SizedBox(
+                    width: 25,
+                  ),
+                  Icon(Icons.logout),
+                  Text(" L O G O U T")
+                ],
+              ),
+            ),
+          ),
+        ),
         appBar: AppBar(
           backgroundColor: Colors.greenAccent,
         ),
@@ -23,12 +47,21 @@ class ChatList extends StatelessWidget {
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            child: Icon(Icons.person),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) {
+                                return ChatPage(name: snapshot.data!.docs[index]["name"],);
+                              },
+                            ));
+                          },
+                          child: ListTile(
+                            leading: const CircleAvatar(
+                              child: Icon(Icons.person),
+                            ),
+                            shape: Border.all(color: Colors.black),
+                            title: Text(snapshot.data!.docs[index]["name"]),
                           ),
-                          shape: Border.all(color: Colors.black),
-                          title: Text(snapshot.data!.docs[index]["name"]),
                         ),
                       );
                     },

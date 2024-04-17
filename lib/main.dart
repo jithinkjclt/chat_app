@@ -1,4 +1,5 @@
 import 'package:chat_app/ui/Log/log.dart';
+import 'package:chat_app/ui/flash_screen/flash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'firebase_options.dart';
@@ -16,10 +17,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
+    return  const MaterialApp(
       title: 'My Chat',
       debugShowCheckedModeBanner: false,
-      home: log(),
+      home: Flash(),
     );
   }
 }

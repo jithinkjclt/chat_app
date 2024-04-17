@@ -29,16 +29,12 @@ class log extends StatelessWidget {
                     height: 50,
                   ),
                   cubit.flag
-                      ? SizedBox(
+                      ? const SizedBox(
                           height: 5,
                         )
                       : textFrom(
                           hint: 'Name',
-                          pri: cubit.change,
                           controller: cubit.namectr,
-                          onTap: () {
-                            cubit.chanager();
-                          },
                           time: cubit.flag ? 500 : 900,
                           pad: cubit.flag ? 28 : 50,
                         ),
@@ -47,11 +43,7 @@ class log extends StatelessWidget {
                   ),
                   textFrom(
                     hint: 'email',
-                    pri: cubit.change,
                     controller: cubit.userctr,
-                    onTap: () {
-                      cubit.chanager();
-                    },
                     time: cubit.flag ? 500 : 900,
                     pad: cubit.flag ? 28 : 50,
                   ),
@@ -60,11 +52,7 @@ class log extends StatelessWidget {
                   ),
                   textFrom(
                     hint: 'Password',
-                    pri: cubit.flag,
                     controller: cubit.passctr,
-                    onTap: () {
-                      cubit.chanager();
-                    },
                     time: cubit.flag ? 500 : 900,
                     pad: cubit.flag ? 28 : 50,
                   ),

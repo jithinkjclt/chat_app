@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../../Localstorage/LocalStorage.dart';
 import '../chat_list/chatlist.dart';
 
 part 'log_state.dart';
@@ -25,11 +26,13 @@ class LogCubit extends Cubit<LogState> {
           .createUserWithEmailAndPassword(
               email: userctr.text.trim(), password: passctr.text.trim())
           .then((value) async {
-        await FirebaseFirestore.instance.collection("user").add({
-          "user": userctr.text,"name":namectr.text
-        });
+        await FirebaseFirestore.instance
+            .collection("user")
+            .add({"user": userctr.text, "name": namectr.text});
         Navigator.of(context)
             .pushReplacement(MaterialPageRoute(builder: (context) {
+          final data1 = LocalStorage();
+          data1.setUser(userctr.text);
           return ChatList();
         }));
       });
@@ -53,6 +56,8 @@ class LogCubit extends Cubit<LogState> {
                 email: userctr.text.trim(), password: passctr.text.trim())
             .then((value) => Navigator.of(context)
                     .pushReplacement(MaterialPageRoute(builder: (context) {
+                  final data1 = LocalStorage();
+                  data1.setUser(userctr.text);
                   return ChatList();
                 })));
       } on FirebaseException catch (e) {
@@ -68,12 +73,6 @@ class LogCubit extends Cubit<LogState> {
       ));
     }
 
-    emit(LogInitial());
-  }
-
-  chanager() {
-    change = !change;
-    print(">>>>>>>>>>>>>>>>>>>>$change");
     emit(LogInitial());
   }
 
