@@ -3,6 +3,7 @@ import 'package:chat_app/ui/chatpage/chatPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../../Localstorage/LocalStorage.dart';
+
 class ChatList extends StatelessWidget {
   const ChatList({super.key});
 
@@ -17,7 +18,6 @@ class ChatList extends StatelessWidget {
                   builder: (context) {
                     LocalStorage().deleteUser();
                     return log();
-
                   },
                 ));
               },
@@ -34,6 +34,10 @@ class ChatList extends StatelessWidget {
           ),
         ),
         appBar: AppBar(
+          title: const Text(
+            "My Chat",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           backgroundColor: Colors.greenAccent,
         ),
         body: StreamBuilder(
@@ -51,7 +55,10 @@ class ChatList extends StatelessWidget {
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) {
-                                return ChatPage(name: snapshot.data!.docs[index]["name"],);
+                                return ChatPage(
+                                  name: snapshot.data!.docs[index]["name"],
+                                  reciver: snapshot.data!.docs[index]["user"],
+                                );
                               },
                             ));
                           },

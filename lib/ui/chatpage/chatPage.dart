@@ -1,14 +1,14 @@
 import 'package:chat_app/ui/chatpage/chat_cubit.dart';
+import 'package:chat_app/ui/chatpage/combonents/senter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChatPage extends StatelessWidget {
-  const ChatPage({super.key, required this.name});
+  const ChatPage({super.key, required this.name, required this.reciver});
 
   final String name;
+  final String reciver;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +60,7 @@ class ChatPage extends StatelessWidget {
               );
             }
             return BlocProvider(
-              create: (context) => ChatCubit(),
+              create: (context) => ChatCubit(reciver),
               child: BlocBuilder<ChatCubit, ChatState>(
                 builder: (context, state) {
                   final cubit = context.read<ChatCubit>();
@@ -71,15 +71,14 @@ class ChatPage extends StatelessWidget {
                         child: ListView.builder(
                           itemCount: snapshot.data!.docs.length,
                           itemBuilder: (context, index) {
-                            return snapshot.data!.docs[index]["user"] ==
-                                values ?
-                            Container(
-                                alignment: Alignment.centerRight,
-                                child: Text(
-                                    snapshot.data!.docs[index]["messege"])):Container(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                    snapshot.data!.docs[index]["messege"]));
+                            return snapshot.data!.docs[index]["senter"] ==
+                                    values
+                                ? Senter(
+                                    text: snapshot.data!.docs[index]["messege"])
+                                : Container(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                        snapshot.data!.docs[index]["messege"]));
                           },
                         ),
                       ),

@@ -10,17 +10,19 @@ part 'chat_state.dart';
 String? values;
 
 class ChatCubit extends Cubit<ChatState> {
-  ChatCubit() : super(ChatInitial());
+  ChatCubit(this.reciver) : super(ChatInitial());
 
   TextEditingController chat = TextEditingController();
-
+String reciver;
   dataStore() async {
-    String value = await LocalStorage().getUser();
-    print("<<<<<<<<<<<<<<<<<<<<<<<<<<<$value");
-    values = value;
-    FirebaseFirestore.instance
-        .collection("messege")
-        .add({"messege": chat.text, "time": DateTime.now(), "user": value});
+    String senter = await LocalStorage().getUser();
+    values = senter;
+    FirebaseFirestore.instance.collection("messege").add({
+      "messege": chat.text,
+      "time": DateTime.now(),
+      "senter": senter,
+      "receiver": reciver
+    });
     chat.clear();
   }
 }
