@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'combonents/reciver.dart';
+
 class ChatPage extends StatelessWidget {
   const ChatPage({super.key, required this.name, required this.reciver});
 
@@ -75,10 +77,9 @@ class ChatPage extends StatelessWidget {
                                     values
                                 ? Senter(
                                     text: snapshot.data!.docs[index]["messege"])
-                                : Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                        snapshot.data!.docs[index]["messege"]));
+                                : Reciver(
+                                    text: snapshot.data!.docs[index]["messege"],
+                                  );
                           },
                         ),
                       ),
