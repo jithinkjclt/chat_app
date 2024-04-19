@@ -16,7 +16,7 @@ class Senter extends StatelessWidget {
           children: [
             const B(x: 5),
             Text(
-            "12.45",
+              "12.45",
               style: const TextStyle(fontWeight: FontWeight.w300),
             ),
             Container(

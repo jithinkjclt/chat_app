@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 
 import '../../../combonents/sizedBox.dart';
 
-
 class Reciver extends StatelessWidget {
   const Reciver({super.key, required this.text});
+
   final String text;
 
   @override
@@ -24,7 +24,7 @@ class Reciver extends StatelessWidget {
                       bottomRight: Radius.circular(45),
                       topLeft: Radius.circular(45),
                       topRight: Radius.circular(45))),
-              child:  Column(
+              child: Column(
                 children: [
                   const B(x: 30),
                   Row(
@@ -32,7 +32,8 @@ class Reciver extends StatelessWidget {
                       const B(x: 25),
                       Text(
                         text,
-                        style: const TextStyle(fontSize: 10, color: Colors.white),
+                        style:
+                            const TextStyle(fontSize: 10, color: Colors.white),
                       )
                     ],
                   ),

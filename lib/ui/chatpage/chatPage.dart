@@ -1,5 +1,6 @@
 import 'package:chat_app/ui/chatpage/chat_cubit.dart';
 import 'package:chat_app/ui/chatpage/combonents/senter.dart';
+import 'package:chat_app/ui/flash_screen/flash_cubit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -53,7 +54,8 @@ class ChatPage extends StatelessWidget {
       body: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection("messege")
-              .orderBy("time")
+              .doc(userId)
+              .collection(reciver)
               .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -74,7 +76,7 @@ class ChatPage extends StatelessWidget {
                           itemCount: snapshot.data!.docs.length,
                           itemBuilder: (context, index) {
                             return snapshot.data!.docs[index]["senter"] ==
-                                    values
+                                    valueUser
                                 ? Senter(
                                     text: snapshot.data!.docs[index]["messege"])
                                 : Reciver(
@@ -97,6 +99,9 @@ class ChatPage extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(20),
                                   border: Border.all(color: Colors.black)),
                               child: TextFormField(
+                                onChanged: (va) {
+                                  cubit.refresh();
+                                },
                                 controller: cubit.chat,
                                 decoration: const InputDecoration(
                                     hintStyle: TextStyle(
@@ -106,15 +111,17 @@ class ChatPage extends StatelessWidget {
                                     border: InputBorder.none),
                               ),
                             ),
-                            IconButton(
-                              onPressed: () {
-                                cubit.dataStore();
-                              },
-                              icon: const Icon(
-                                Icons.send,
-                                size: 40,
-                              ),
-                            )
+                            cubit.chat.text.isNotEmpty
+                                ? IconButton(
+                                    onPressed: () {
+                                      cubit.dataStore();
+                                    },
+                                    icon: const Icon(
+                                      Icons.send,
+                                      size: 40,
+                                    ),
+                                  )
+                                : Icon(Icons.mic)
                           ],
                         ),
                       )

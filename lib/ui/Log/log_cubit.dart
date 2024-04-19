@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:bloc/bloc.dart';
+import 'package:chat_app/model/login_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../Localstorage/LocalStorage.dart';
 import '../chat_list/chatlist.dart';
+import '../flash_screen/flash_screen.dart';
 
 part 'log_state.dart';
 
@@ -22,20 +26,27 @@ class LogCubit extends Cubit<LogState> {
 
   registor() async {
     try {
-      await FirebaseAuth.instance
+      UserCredential data = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
-              email: userctr.text.trim(), password: passctr.text.trim())
-          .then((value) async {
+              email: userctr.text.trim(), password: passctr.text.trim());
+      if (data.user != null) {
+        LoginModel logvar = LoginModel(
+          email: data.user!.email,
+          userId: data.user!.uid.toString(),
+          username: namectr.text.trim(),
+        );
+        LocalStorage.setUser(jsonEncode(logvar.toJson()));
+
         await FirebaseFirestore.instance
             .collection("user")
             .add({"user": userctr.text, "name": namectr.text});
         Navigator.of(context)
             .pushReplacement(MaterialPageRoute(builder: (context) {
-          final data1 = LocalStorage();
-          data1.setUser(userctr.text);
-          return ChatList();
+          return const Flash();
         }));
-      });
+      } else {
+        print("sdfsdafs");
+      }
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger(
           child: AlertDialog(
@@ -51,15 +62,24 @@ class LogCubit extends Cubit<LogState> {
       emit(LogInitial());
 
       try {
-        await FirebaseAuth.instance
+        UserCredential data = await FirebaseAuth.instance
             .signInWithEmailAndPassword(
-                email: userctr.text.trim(), password: passctr.text.trim())
-            .then((value) => Navigator.of(context)
-                    .pushReplacement(MaterialPageRoute(builder: (context) {
-                  final data1 = LocalStorage();
-                  data1.setUser(userctr.text);
-                  return ChatList();
-                })));
+                email: userctr.text.trim(), password: passctr.text.trim());
+        if (data.user != null) {
+          LoginModel logvar = LoginModel(
+            email: data.user!.email,
+            userId: data.user!.uid.toString(),
+          );
+          LocalStorage.setUser(jsonEncode(logvar.toJson()));
+
+
+          Navigator.of(context)
+              .pushReplacement(MaterialPageRoute(builder: (context) {
+            return const Flash();
+          }));
+        } else {
+          print("sdfsdafs");
+        }
       } on FirebaseException catch (e) {
         flame = true;
 

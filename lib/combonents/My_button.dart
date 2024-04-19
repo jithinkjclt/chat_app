@@ -2,17 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class button extends StatelessWidget {
-  const button({super.key, required this.text, required this.color, required this.radi});
-final String text;
+  const button(
+      {super.key, required this.text, required this.color, required this.radi});
+
+  final String text;
   final Color color;
-final double radi;
+  final double radi;
+
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(radi),
-        color: color
-      ),
+          borderRadius: BorderRadius.circular(radi), color: color),
       height: 50,
       width: 150,
       child: Row(

@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:bloc/bloc.dart';
+import 'package:chat_app/model/login_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
@@ -13,16 +16,29 @@ class ChatCubit extends Cubit<ChatState> {
   ChatCubit(this.reciver) : super(ChatInitial());
 
   TextEditingController chat = TextEditingController();
-String reciver;
+  String reciver;
+
   dataStore() async {
-    String senter = await LocalStorage().getUser();
-    values = senter;
-    FirebaseFirestore.instance.collection("messege").add({
+    String? data = await LocalStorage.getUser();
+    LoginModel dataValue = LoginModel.fromJson(jsonDecode(data!));
+    FirebaseFirestore.instance
+        .collection("messege")
+        .doc(dataValue.userId)
+        .collection(reciver)
+        .add({
       "messege": chat.text,
       "time": DateTime.now(),
-      "senter": senter,
+      "senter": dataValue.email,
       "receiver": reciver
     });
+
     chat.clear();
+    refresh();
+
+  }
+
+  refresh(){
+    emit(ChatInitial());
   }
 }
+
