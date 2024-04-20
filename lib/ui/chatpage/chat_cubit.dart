@@ -21,9 +21,11 @@ class ChatCubit extends Cubit<ChatState> {
   dataStore() async {
     String? data = await LocalStorage.getUser();
     LoginModel dataValue = LoginModel.fromJson(jsonDecode(data!));
+
+    var chatRoomId="$reciver+${dataValue.username}";
     FirebaseFirestore.instance
         .collection("messege")
-        .doc(dataValue.userId)
+        .doc(chatRoomId)
         .collection(reciver)
         .add({
       "messege": chat.text,
