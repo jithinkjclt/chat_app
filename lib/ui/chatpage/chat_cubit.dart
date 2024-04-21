@@ -11,6 +11,7 @@ import '../../Localstorage/LocalStorage.dart';
 part 'chat_state.dart';
 
 String? values;
+String? chatRoomId;
 
 class ChatCubit extends Cubit<ChatState> {
   ChatCubit(this.reciver) : super(ChatInitial());
@@ -22,10 +23,10 @@ class ChatCubit extends Cubit<ChatState> {
     String? data = await LocalStorage.getUser();
     LoginModel dataValue = LoginModel.fromJson(jsonDecode(data!));
 
-    var chatRoomId="$reciver+${dataValue.username}";
+
     FirebaseFirestore.instance
         .collection("messege")
-        .doc(chatRoomId)
+        .doc(dataValue.userId)
         .collection(reciver)
         .add({
       "messege": chat.text,
