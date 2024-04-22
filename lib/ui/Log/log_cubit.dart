@@ -39,7 +39,7 @@ class LogCubit extends Cubit<LogState> {
 
         await FirebaseFirestore.instance
             .collection("user")
-            .add({"user": userctr.text, "name": namectr.text});
+            .add({"user": userctr.text, "name": namectr.text,"user_id":data.user!.uid });
         Navigator.of(context)
             .pushReplacement(MaterialPageRoute(builder: (context) {
           return const Flash();

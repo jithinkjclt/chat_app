@@ -8,10 +8,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'combonents/reciver.dart';
 
 class ChatPage extends StatelessWidget {
-  const ChatPage({super.key, required this.name, required this.reciver});
+  const ChatPage(
+      {super.key,
+      required this.name,
+      required this.reciver,
+      required this.endUserId});
 
   final String name;
   final String reciver;
+  final String endUserId;
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +60,7 @@ class ChatPage extends StatelessWidget {
           stream: FirebaseFirestore.instance
               .collection("messege")
               .doc(userId)
-              .collection(reciver)
+              .collection(endUserId)
               .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -63,73 +68,94 @@ class ChatPage extends StatelessWidget {
                 child: CircularProgressIndicator(),
               );
             }
-            return BlocProvider(
-              create: (context) => ChatCubit(reciver),
-              child: BlocBuilder<ChatCubit, ChatState>(
-                builder: (context, state) {
-                  final cubit = context.read<ChatCubit>();
-                  return Column(
-                    children: [
-                      Expanded(
-                        flex: 9,
-                        child: ListView.builder(
-                          itemCount: snapshot.data!.docs.length,
-                          itemBuilder: (context, index) {
-                            return snapshot.data!.docs[index]["senter"] ==
-                                    valueUser
-                                ? Senter(
-                                    text: snapshot.data!.docs[index]["messege"])
-                                : Reciver(
-                                    text: snapshot.data!.docs[index]["messege"],
-                                  );
-                          },
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Row(
+            var userChat = snapshot.data!.docs;
+            return StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection("messege")
+                    .doc(endUserId)
+                    .collection(userId!)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Text("");
+                  }
+                  var endUserChat = snapshot.data!.docs;
+                  List chatList = List.from(userChat)..addAll(endUserChat);
+
+                  // chatList.sort((b,a) {
+                  //   var first=DateTime.parse(a["time"]);
+                  //       var second=DateTime.parse(b["time"]);
+                  //       return first.compareTo(second);
+                  // },);
+
+                  return BlocProvider(
+                    create: (context) => ChatCubit(endUserId),
+                    child: BlocBuilder<ChatCubit, ChatState>(
+                      builder: (context, state) {
+                        final cubit = context.read<ChatCubit>();
+                        return Column(
                           children: [
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            Container(
-                              width: 320,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(color: Colors.black)),
-                              child: TextFormField(
-                                onChanged: (va) {
-                                  cubit.refresh();
+                            Expanded(
+                              flex: 9,
+                              child: ListView.builder(
+                                itemCount: chatList.length,
+                                itemBuilder: (context, index) {
+                                  return chatList[index]["senter"] == userId
+                                      ? Senter(text: chatList[index]["messege"])
+                                      : Reciver(
+                                          text: chatList[index]["messege"],
+                                        );
                                 },
-                                controller: cubit.chat,
-                                decoration: const InputDecoration(
-                                    hintStyle: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w300),
-                                    hintText: "   Type here",
-                                    border: InputBorder.none),
                               ),
                             ),
-                            cubit.chat.text.isNotEmpty
-                                ? IconButton(
-                                    onPressed: () {
-                                      cubit.dataStore();
-                                    },
-                                    icon: const Icon(
-                                      Icons.send,
-                                      size: 40,
+                            Expanded(
+                              flex: 1,
+                              child: Row(
+                                children: [
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                                  Container(
+                                    width: 320,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        border:
+                                            Border.all(color: Colors.black)),
+                                    child: TextFormField(
+                                      onChanged: (va) {
+                                        cubit.refresh();
+                                      },
+                                      controller: cubit.chat,
+                                      decoration: const InputDecoration(
+                                          hintStyle: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w300),
+                                          hintText: "   Type here",
+                                          border: InputBorder.none),
                                     ),
-                                  )
-                                : Icon(Icons.mic)
+                                  ),
+                                  cubit.chat.text.isNotEmpty
+                                      ? IconButton(
+                                          onPressed: () {
+                                            cubit.dataStore();
+                                            cubit.refresh();
+                                          },
+                                          icon: const Icon(
+                                            Icons.send,
+                                            size: 40,
+                                          ),
+                                        )
+                                      : Icon(Icons.mic)
+                                ],
+                              ),
+                            )
                           ],
-                        ),
-                      )
-                    ],
+                        );
+                      },
+                    ),
                   );
-                },
-              ),
-            );
+                });
           }),
     );
   }

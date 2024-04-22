@@ -56,6 +56,7 @@ class ChatList extends StatelessWidget {
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) {
                                 return ChatPage(
+                                  endUserId: snapshot.data!.docs[index]["user_id"],
                                   name: snapshot.data!.docs[index]["name"],
                                   reciver: snapshot.data!.docs[index]["user"],
                                 );

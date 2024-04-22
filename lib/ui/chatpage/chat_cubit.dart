@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 import 'package:chat_app/model/login_model.dart';
+import 'package:chat_app/ui/flash_screen/flash_cubit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
@@ -14,10 +15,10 @@ String? values;
 String? chatRoomId;
 
 class ChatCubit extends Cubit<ChatState> {
-  ChatCubit(this.reciver) : super(ChatInitial());
+  ChatCubit(this.endUserId) : super(ChatInitial());
 
   TextEditingController chat = TextEditingController();
-  String reciver;
+  String endUserId;
 
   dataStore() async {
     String? data = await LocalStorage.getUser();
@@ -27,12 +28,11 @@ class ChatCubit extends Cubit<ChatState> {
     FirebaseFirestore.instance
         .collection("messege")
         .doc(dataValue.userId)
-        .collection(reciver)
+        .collection(endUserId)
         .add({
       "messege": chat.text,
       "time": DateTime.now(),
-      "senter": dataValue.email,
-      "receiver": reciver
+      "senter": userId,
     });
 
     chat.clear();
