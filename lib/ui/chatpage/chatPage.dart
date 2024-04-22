@@ -82,11 +82,11 @@ class ChatPage extends StatelessWidget {
                   var endUserChat = snapshot.data!.docs;
                   List chatList = List.from(userChat)..addAll(endUserChat);
 
-                  // chatList.sort((b,a) {
-                  //   var first=DateTime.parse(a["time"]);
-                  //       var second=DateTime.parse(b["time"]);
-                  //       return first.compareTo(second);
-                  // },);
+                  chatList.sort((a,b) {
+                    var first=DateTime.parse(a["time"]);
+                        var second=DateTime.parse(b["time"]);
+                        return first.compareTo(second);
+                  },);
 
                   return BlocProvider(
                     create: (context) => ChatCubit(endUserId),
@@ -100,6 +100,8 @@ class ChatPage extends StatelessWidget {
                               child: ListView.builder(
                                 itemCount: chatList.length,
                                 itemBuilder: (context, index) {
+                                  // print(snapshot.data!.docs[index]["time"]);
+
                                   return chatList[index]["senter"] == userId
                                       ? Senter(text: chatList[index]["messege"])
                                       : Reciver(

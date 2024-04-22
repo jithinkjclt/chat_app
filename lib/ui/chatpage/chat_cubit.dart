@@ -31,7 +31,7 @@ class ChatCubit extends Cubit<ChatState> {
         .collection(endUserId)
         .add({
       "messege": chat.text,
-      "time": DateTime.now(),
+      "time": DateTime.now().toString(),
       "senter": userId,
     });
 
