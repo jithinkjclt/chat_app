@@ -3,20 +3,22 @@ import 'package:flutter/material.dart';
 import '../../../combonents/sizedBox.dart';
 
 class Senter extends StatelessWidget {
-  const Senter({super.key, required this.text});
+  const Senter({super.key, required this.text, required this.time});
 
   final String text;
+  final String time;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
+        const SizedBox(height: 5,),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             const B(x: 5),
-            Text(
-              "12.45",
+             Text(
+              time,
               style: const TextStyle(fontWeight: FontWeight.w300),
             ),
             Container(
@@ -46,7 +48,7 @@ class Senter extends StatelessWidget {
             ),
           ],
         ),
-        const B(x: 50),
+        const B(x: 15),
       ],
     );
   }

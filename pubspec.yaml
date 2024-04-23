@@ -40,6 +40,9 @@ dependencies:
   firebase_auth: ^4.19.0
   cloud_firestore: ^4.16.1
   shared_preferences: ^2.2.3
+  intl: ^0.19.0
+  chat_bubbles: ^1.6.0
+  vengamo_chat_ui: ^1.4.8
 
 dev_dependencies:
   flutter_test:

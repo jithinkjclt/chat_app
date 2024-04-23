@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import '../../../combonents/sizedBox.dart';
 
 class Reciver extends StatelessWidget {
-  const Reciver({super.key, required this.text});
+  const Reciver({super.key, required this.text, required this.time});
 
   final String text;
+  final String time;
 
   @override
   Widget build(BuildContext context) {
@@ -40,14 +41,14 @@ class Reciver extends StatelessWidget {
                 ],
               ),
             ),
-            const B(x: 5),
-            const Text(
-              "12.34",
+            const B(x: 15),
+             Text(
+              time,
               style: TextStyle(fontWeight: FontWeight.w300),
             ),
           ],
         ),
-        const B(x: 20),
+        const B(x: 5),
       ],
     );
   }

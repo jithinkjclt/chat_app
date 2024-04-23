@@ -1,9 +1,11 @@
 import 'package:chat_app/ui/chatpage/chat_cubit.dart';
 import 'package:chat_app/ui/chatpage/combonents/senter.dart';
 import 'package:chat_app/ui/flash_screen/flash_cubit.dart';
+import 'package:chat_bubbles/bubbles/bubble_special_three.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import 'combonents/reciver.dart';
 
@@ -82,11 +84,13 @@ class ChatPage extends StatelessWidget {
                   var endUserChat = snapshot.data!.docs;
                   List chatList = List.from(userChat)..addAll(endUserChat);
 
-                  chatList.sort((a,b) {
-                    var first=DateTime.parse(a["time"]);
-                        var second=DateTime.parse(b["time"]);
-                        return first.compareTo(second);
-                  },);
+                  chatList.sort(
+                    (a, b) {
+                      var first = DateTime.parse(a["time"]);
+                      var second = DateTime.parse(b["time"]);
+                      return first.compareTo(second);
+                    },
+                  );
 
                   return BlocProvider(
                     create: (context) => ChatCubit(endUserId),
@@ -100,11 +104,24 @@ class ChatPage extends StatelessWidget {
                               child: ListView.builder(
                                 itemCount: chatList.length,
                                 itemBuilder: (context, index) {
-                                  // print(snapshot.data!.docs[index]["time"]);
+                                  DateTime dateTime =
+                                      DateTime.parse(chatList[index]["time"]);
+                                  String formattedDateTime =
+                                      DateFormat("hh:mm a").format(dateTime);
 
                                   return chatList[index]["senter"] == userId
-                                      ? Senter(text: chatList[index]["messege"])
-                                      : Reciver(
+                                      ? BubbleSpecialThree(
+                                    delivered: true,
+                                          seen: false,
+                                          text: chatList[index]["messege"],
+                                        )
+                                      : BubbleSpecialThree(
+                                    color: Colors.black12,
+
+                                          isSender: false,
+                                          textStyle: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16),
                                           text: chatList[index]["messege"],
                                         );
                                 },
@@ -141,7 +158,6 @@ class ChatPage extends StatelessWidget {
                                       ? IconButton(
                                           onPressed: () {
                                             cubit.dataStore();
-                                            cubit.refresh();
                                           },
                                           icon: const Icon(
                                             Icons.send,

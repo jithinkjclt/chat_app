@@ -11,25 +11,53 @@ class ChatList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         drawer: Drawer(
-          child: Center(
-            child: InkWell(
-              onTap: () {
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) {
-                    LocalStorage().deleteUser();
-                    return log();
-                  },
-                ));
-              },
-              child: const Row(
-                children: [
-                  SizedBox(
-                    width: 25,
+          child: InkWell(
+            onTap: () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) {
+                  LocalStorage().deleteUser();
+                  return log();
+                },
+              ));
+            },
+            child: const Column(
+              children: [
+                SizedBox(
+                  height: 100,
+                ),
+                CircleAvatar(
+                  radius: 50,
+                  child: Icon(
+                    Icons.person,
+                    size: 50,
                   ),
-                  Icon(Icons.logout),
-                  Text(" L O G O U T")
-                ],
-              ),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Text(
+                  "user",
+                  style: TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Text("Email id",
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.bold)),
+                Spacer(),
+                Row(
+                  children: [
+                    Spacer(),
+                    Icon(Icons.logout),
+                    Text(" L O G O U T")
+                  ],
+                ),
+                SizedBox(
+                  height: 25,
+                )
+              ],
             ),
           ),
         ),
@@ -43,37 +71,54 @@ class ChatList extends StatelessWidget {
         body: StreamBuilder(
           stream: FirebaseFirestore.instance.collection("user").snapshots(),
           builder: (context, snapshot) {
-            return snapshot.connectionState == ConnectionState.waiting
-                ? const Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : ListView.builder(
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) {
-                                return ChatPage(
-                                  endUserId: snapshot.data!.docs[index]["user_id"],
-                                  name: snapshot.data!.docs[index]["name"],
-                                  reciver: snapshot.data!.docs[index]["user"],
-                                );
-                              },
-                            ));
-                          },
-                          child: ListTile(
-                            leading: const CircleAvatar(
-                              child: Icon(Icons.person),
-                            ),
-                            shape: Border.all(color: Colors.black),
-                            title: Text(snapshot.data!.docs[index]["name"]),
-                          ),
-                        ),
-                      );
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            return ListView.builder(
+                scrollDirection: axisDirectionToAxis(AxisDirection.down),
+                itemBuilder: (context, index) {
+
+                  List userList = snapshot.data!.docs;
+                  userList.remove(userList[index]["user_id"]);
+
+                  return InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) {
+                          return ChatPage(
+                            endUserId: userList[index]["user_id"],
+                            name: userList[index]["name"],
+                            reciver: userList[index]["user"],
+                          );
+                        },
+                      ));
                     },
-                    itemCount: snapshot.data!.docs.length);
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(color: Colors.black12, width: .5)),
+                      height: 65,
+                      width: 300,
+                      child: Row(
+                        children: [
+                          const SizedBox(
+                            width: 15,
+                          ),
+                          const CircleAvatar(
+                            child: Icon(Icons.person),
+                          ),
+                          const SizedBox(
+                            width: 25,
+                          ),
+                          Text(snapshot.data!.docs[index]["name"]),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+                itemCount: snapshot.data!.docs.length - 1);
           },
         ));
   }
