@@ -1,4 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../combonents/My_button.dart';
@@ -20,11 +23,16 @@ class log extends StatelessWidget {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
-                    Icons.message,
-                    color: Colors.black12,
-                    size: 50,
-                  ),
+                  Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        image: const DecorationImage(
+                            fit: BoxFit.fill,
+                            image: AssetImage(
+                                "assets/Screenshot 2024-04-24 131346.png")),
+                      ),
+                      height: 100,
+                      width: 100),
                   const SizedBox(
                     height: 50,
                   ),
@@ -68,8 +76,8 @@ class log extends StatelessWidget {
                             radi: cubit.flag ? 5 : 50,
                             text: 'Login',
                             color: cubit.flag
-                                ? Colors.blueAccent
-                                : Colors.greenAccent,
+                                ? const Color(0xFFeb009b)
+                                : const Color(0xFFa0039e),
                           ),
                         )
                       : InkWell(
@@ -79,8 +87,8 @@ class log extends StatelessWidget {
                           child: button(
                             text: 'Registor',
                             color: cubit.flag
-                                ? Colors.blueAccent
-                                : Colors.greenAccent,
+                                ? const Color(0xFFeb009b)
+                                : const Color(0xFFa0039e),
                             radi: cubit.flag ? 5 : 50,
                           ),
                         ),
@@ -100,7 +108,7 @@ class log extends StatelessWidget {
                               },
                               child: const Text(
                                 "Registor ",
-                                style: TextStyle(color: Colors.blueAccent),
+                                style: TextStyle(color: Color(0xFFeb009b)),
                               ),
                             )
                           : InkWell(
@@ -109,7 +117,7 @@ class log extends StatelessWidget {
                               },
                               child: const Text(
                                 "Login ",
-                                style: TextStyle(color: Colors.blueAccent),
+                                style: TextStyle(color: Color(0xFFeb009b)),
                               ),
                             ),
                     ],

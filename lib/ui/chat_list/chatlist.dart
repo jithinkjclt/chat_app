@@ -2,6 +2,7 @@ import 'package:chat_app/ui/Log/log.dart';
 import 'package:chat_app/ui/chatpage/chatPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import '../../Localstorage/LocalStorage.dart';
 
 class ChatList extends StatelessWidget {
@@ -10,116 +11,140 @@ class ChatList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: Drawer(
-          child: InkWell(
-            onTap: () {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) {
-                  LocalStorage().deleteUser();
-                  return log();
-                },
-              ));
-            },
-            child: const Column(
-              children: [
-                SizedBox(
-                  height: 100,
+      drawer: Drawer(
+        child: InkWell(
+          onTap: () {
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) {
+                LocalStorage().deleteUser();
+                return log();
+              },
+            ));
+          },
+          child: const Column(
+            children: [
+              SizedBox(
+                height: 100,
+              ),
+              CircleAvatar(
+                radius: 50,
+                child: Icon(
+                  Icons.person,
+                  size: 50,
                 ),
-                CircleAvatar(
-                  radius: 50,
-                  child: Icon(
-                    Icons.person,
-                    size: 50,
-                  ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Text(
-                  "user",
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Text(
+                "user",
+                style:
+                    TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Text("Email id",
                   style: TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Text("Email id",
-                    style: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold)),
-                Spacer(),
-                Row(
-                  children: [
-                    Spacer(),
-                    Icon(Icons.logout),
-                    Text(" L O G O U T")
-                  ],
-                ),
-                SizedBox(
-                  height: 25,
-                )
-              ],
-            ),
+                      color: Colors.black, fontWeight: FontWeight.bold)),
+              Spacer(),
+              Row(
+                children: [
+                  Spacer(),
+                  Icon(Icons.logout),
+                  Text(" L O G O U T        ")
+                ],
+              ),
+              SizedBox(
+                height: 25,
+              )
+            ],
           ),
         ),
-        appBar: AppBar(
+      ),
+      appBar: AppBar(
           title: const Text(
-            "My Chat",
+            "Chats",
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          backgroundColor: Colors.greenAccent,
-        ),
-        body: StreamBuilder(
-          stream: FirebaseFirestore.instance.collection("user").snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            return ListView.builder(
-                scrollDirection: axisDirectionToAxis(AxisDirection.down),
-                itemBuilder: (context, index) {
+          backgroundColor: const Color(0xFFDC80D0)),
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection("user").snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          return ListView.builder(
+              scrollDirection: axisDirectionToAxis(AxisDirection.down),
+              itemBuilder: (context, index) {
+                List userList = snapshot.data!.docs;
+                userList.remove(userList[index]["user_id"]);
 
-                  List userList = snapshot.data!.docs;
-                  userList.remove(userList[index]["user_id"]);
-
-                  return InkWell(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) {
-                          return ChatPage(
-                            endUserId: userList[index]["user_id"],
-                            name: userList[index]["name"],
-                            reciver: userList[index]["user"],
-                          );
-                        },
-                      ));
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(color: Colors.black12, width: .5)),
-                      height: 65,
-                      width: 300,
-                      child: Row(
-                        children: [
-                          const SizedBox(
-                            width: 15,
-                          ),
-                          const CircleAvatar(
-                            child: Icon(Icons.person),
-                          ),
-                          const SizedBox(
-                            width: 25,
-                          ),
-                          Text(snapshot.data!.docs[index]["name"]),
-                        ],
-                      ),
+                return InkWell(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) {
+                        return ChatPage(
+                          endUserId: userList[index]["user_id"],
+                          name: userList[index]["name"],
+                          reciver: userList[index]["user"],
+                        );
+                      },
+                    ));
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(color: Colors.black12, width: .5)),
+                    height: 65,
+                    width: 300,
+                    child: Row(
+                      children: [
+                        const SizedBox(
+                          width: 15,
+                        ),
+                        const CircleAvatar(
+                          child: Icon(Icons.person),
+                        ),
+                        const SizedBox(
+                          width: 25,
+                        ),
+                        Text(snapshot.data!.docs[index]["name"]),
+                      ],
                     ),
-                  );
-                },
-                itemCount: snapshot.data!.docs.length - 1);
-          },
-        ));
+                  ),
+                );
+              },
+              itemCount: snapshot.data!.docs.length - 1);
+        },
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SalomonBottomBar(
+          items: [
+            /// Home
+            SalomonBottomBarItem(
+              icon: const Icon(Icons.home),
+              title: const Text("Home"),
+              selectedColor: Colors.purple,
+            ),
+
+            SalomonBottomBarItem(
+              icon: const Icon(Icons.search),
+              title: const Text("Search"),
+              selectedColor: Colors.orange,
+            ),
+
+            SalomonBottomBarItem(
+              icon: const Icon(Icons.person),
+              title: const Text("Profile"),
+              selectedColor: Colors.teal,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -1,13 +1,12 @@
+import 'dart:ui';
+
 import 'package:chat_app/ui/chatpage/chat_cubit.dart';
-import 'package:chat_app/ui/chatpage/combonents/senter.dart';
 import 'package:chat_app/ui/flash_screen/flash_cubit.dart';
 import 'package:chat_bubbles/bubbles/bubble_special_three.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-
-import 'combonents/reciver.dart';
 
 class ChatPage extends StatelessWidget {
   const ChatPage(
@@ -25,7 +24,7 @@ class ChatPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leadingWidth: 90,
-        backgroundColor: Colors.green,
+        backgroundColor: Color(0xFF0DC80D0),
         leading: Row(
           children: [
             const SizedBox(width: 10),
@@ -35,7 +34,9 @@ class ChatPage extends StatelessWidget {
                 },
                 child: const Icon(Icons.arrow_back)),
             const SizedBox(width: 10),
-            const CircleAvatar()
+            const CircleAvatar(
+              child: Icon(Icons.person),
+            )
           ],
         ),
         automaticallyImplyLeading: true,
@@ -79,7 +80,7 @@ class ChatPage extends StatelessWidget {
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Text("");
+                    return const Text("");
                   }
                   var endUserChat = snapshot.data!.docs;
                   List chatList = List.from(userChat)..addAll(endUserChat);
@@ -111,16 +112,18 @@ class ChatPage extends StatelessWidget {
 
                                   return chatList[index]["senter"] == userId
                                       ? BubbleSpecialThree(
-                                    delivered: true,
+                                          color: Color(0xFFB996B4),
+                                          tail: false,
+                                          delivered: true,
                                           seen: false,
                                           text: chatList[index]["messege"],
                                         )
                                       : BubbleSpecialThree(
-                                    color: Colors.black12,
-
+                                          color: Color(0xFF8B5083),
+                                          tail: false,
                                           isSender: false,
                                           textStyle: const TextStyle(
-                                              color: Colors.black,
+                                              color: Colors.white,
                                               fontSize: 16),
                                           text: chatList[index]["messege"],
                                         );
@@ -164,7 +167,7 @@ class ChatPage extends StatelessWidget {
                                             size: 40,
                                           ),
                                         )
-                                      : Icon(Icons.mic)
+                                      : const Icon(Icons.mic)
                                 ],
                               ),
                             )

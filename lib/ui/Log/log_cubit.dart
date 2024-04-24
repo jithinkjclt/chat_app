@@ -22,7 +22,10 @@ class LogCubit extends Cubit<LogState> {
   TextEditingController userctr = TextEditingController();
   TextEditingController passctr = TextEditingController();
   TextEditingController namectr = TextEditingController();
+
+
   bool flame = true;
+
 
   registor() async {
     try {

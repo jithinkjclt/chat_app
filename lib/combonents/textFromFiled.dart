@@ -30,7 +30,7 @@ class textFrom extends StatelessWidget {
             hintText: hint,
             focusedBorder: const OutlineInputBorder(
                 borderSide: BorderSide(
-              color: Colors.black,
+              color:Color(0xFFeb009b),
             ))),
       ),
     );

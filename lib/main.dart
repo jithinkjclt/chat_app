@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  const MaterialApp(
-      title: 'My Chat',
+      title: 'Connectify ',
       debugShowCheckedModeBanner: false,
       home: Flash(),
     );
