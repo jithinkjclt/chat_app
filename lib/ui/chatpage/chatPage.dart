@@ -123,7 +123,7 @@ class ChatPage extends StatelessWidget {
                                           tail: false,
                                           isSender: false,
                                           textStyle: const TextStyle(
-                                              color: Colors.white,
+                                              color: Colors.black,
                                               fontSize: 16),
                                           text: chatList[index]["messege"],
                                         );

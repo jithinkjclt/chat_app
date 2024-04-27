@@ -25,8 +25,6 @@ class ChatCubit extends Cubit<ChatState> {
     LoginModel dataValue = LoginModel.fromJson(jsonDecode(data!));
 
 
-
-
     FirebaseFirestore.instance
         .collection("messege")
         .doc(dataValue.userId)
@@ -42,7 +40,7 @@ class ChatCubit extends Cubit<ChatState> {
 
   }
 
-  refresh(){
+  refresh() {
     emit(ChatInitial());
   }
 }

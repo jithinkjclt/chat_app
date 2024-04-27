@@ -11,17 +11,14 @@ void main() async {
   );
   runApp(const MyApp());
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return  const MaterialApp(
+    return const MaterialApp(
       title: 'Connectify ',
       debugShowCheckedModeBanner: false,
       home: Flash(),
     );
   }
 }
-
